@@ -1,0 +1,14 @@
+version: '3'
+services:
+  db:
+    image: postgres:14.4-alpine
+    container_name: bankDB
+    restart: always
+    env_file: 
+      - .env
+    ports:
+      - ${POSTGRES_PORT}
+    volumes:
+      - db:/var/lib/postgres/data
+volumes:
+  db:
