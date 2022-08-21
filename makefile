@@ -1,9 +1,17 @@
-.PHONY: sqlc
+.PHONY: sqlc tests
+
+# TESTS
+tests:
+	@go test -v  -cover -coverpkg=./... ./...
+
+coverage:
+	@go test -v -coverprofile=coverage.out -coverpkg=./... ./...
+	@go tool cover -html=coverage.out
+	@rm coverage.out
 
 # SQLC
 sqlc:
 	@sqlc generate
-
 
 # MIGRATIONS
 up:
