@@ -8,6 +8,7 @@ Im learning to build a backend for a simplebank, from TECH SCHOOL's masterclass 
 - Implemented balance transfer transaction.
 - TX lock handled.
 - Unit tests.
+- Github actions CI
 
 🚧 More features to be made... 🚧
 
