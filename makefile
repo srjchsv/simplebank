@@ -26,11 +26,8 @@ get-accounts:
 	@curl -v -X GET 'localhost:8080/accounts?page_id=1&page_size=5' 
 
 # TESTS
-test:
-	@docker compose up -d
-	@make up
-	@go test -v -cover  -coverpkg=./... ./...
-	@docker compose stop
+tests:
+	@go test -v  -cover -coverpkg=./... ./...
 
 coverage:
 	@docker compose up -d
