@@ -1,4 +1,4 @@
-### 🏦 Education project- simplebank🏦
+### 🏦 Educational project- simplebank🏦
 
 Im learning to build a backend for a simplebank, from TECH SCHOOL's masterclass series.
 
