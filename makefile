@@ -1,4 +1,20 @@
-.PHONY: sqlc test
+.PHONY: sqlc test server
+
+# SERVER
+server:
+	@go run cmd/app/*.go
+
+create-account:
+	@curl -v -X POST -H 'Accect: application/json' -H 'Content-Type: application/json' --data '{"owner":"Tobby","currency":"USD"}' http://localhost:8080/accounts
+
+get-account:
+	@curl -v -X GET 'localhost:8080/accounts/1' 
+	
+delete-account:
+	@curl -v -X DELETE 'localhost:8080/accounts/1' 
+
+get-accounts:
+	@curl -v -X GET 'localhost:8080/accounts?page_id=1&page_size=5' 
 
 # TESTS
 test:

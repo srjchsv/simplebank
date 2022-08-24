@@ -9,6 +9,7 @@ Im learning to build a backend for a simplebank, from TECH SCHOOL's masterclass 
 - TX lock handled.
 - Unit tests.
 - Github actions CI
+- Gin rest api
 
 🚧 More features to be made... 🚧
 
