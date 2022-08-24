@@ -14,11 +14,9 @@ var (
 )
 
 func TestQuery_TransferTx(t *testing.T) {
-	txKey := struct{}{}
 	store := repository.NewStore(testDB)
 	account1 := createRandomAccount(t)
 	account2 := createRandomAccount(t)
-	fmt.Printf(">> balance before: %d %d\n", account1.Balance, account2.Balance)
 
 	// run n conccurent transfer transactions
 	n := 3
@@ -28,11 +26,9 @@ func TestQuery_TransferTx(t *testing.T) {
 	errs := make(chan error)
 
 	for i := 0; i < n; i++ {
-		txName := fmt.Sprintf("tx %d", i+1)
 
 		go func() {
-			ctx := context.WithValue(context.Background(), txKey, txName)
-			result, err := store.TransferTx(ctx, repository.TransferTxParams{
+			result, err := store.TransferTx(context.Background(), repository.TransferTxParams{
 				FromAccountID: account1.ID,
 				ToAccountID:   account2.ID,
 				Amount:        amount,
@@ -119,8 +115,6 @@ func TestQuery_TransferTxDeadLock(t *testing.T) {
 
 	account1 := createRandomAccount(t)
 	account2 := createRandomAccount(t)
-
-	fmt.Printf(">> balance before: %d %d\n", account1.Balance, account2.Balance)
 
 	// run n conccurent transfer transactions
 	n := 10
