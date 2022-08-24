@@ -1,7 +1,7 @@
-.PHONY: sqlc tests
+.PHONY: sqlc test
 
 # TESTS
-tests:
+test:
 	@go test -v  -cover -coverpkg=./... ./...
 
 coverage:
