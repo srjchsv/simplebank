@@ -1,0 +1,49 @@
+name: ci-test
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_USER: user
+          POSTGRES_PASSWORD: password
+          POSTGRES_DB: db
+          POSTGRES_POOL: 5
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+
+    - name: Set up Go 1.x
+    uses: actions/setup-go@v2
+    with:
+        go-version: ^1.15
+    id: go
+
+    - name: Check out code into the Go module directory
+    uses: actions/checkout@v2
+
+    - name: Install goose migrations
+      run: go install github.com/pressly/goose/v3/cmd/goose@latest
+    
+    - name: Run migrations
+      run: make up
+
+    - name: Test
+    run: make test

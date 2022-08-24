@@ -3,7 +3,6 @@ package repository
 import (
 	"database/sql"
 	"fmt"
-	"log"
 	"os"
 	"testing"
 
@@ -21,7 +20,7 @@ var (
 func TestMain(m *testing.M) {
 	err := godotenv.Load("../../.env")
 	if err != nil {
-		log.Fatal("cannot load env file")
+		logrus.Fatal("cannot load env file")
 	}
 
 	dbConfigs := fmt.Sprintf("host=%s user=%s password=%s dbname=%s sslmode=disable",
@@ -31,7 +30,7 @@ func TestMain(m *testing.M) {
 		os.Getenv("POSTGRES_DB"))
 	testDB, err = sql.Open(os.Getenv("DB_DRIVER"), dbConfigs)
 	if err != nil {
-		log.Fatal("cannot connect to db")
+		logrus.Fatal("cannot connect to db")
 	}
 
 	testQueries = repository.New(testDB)

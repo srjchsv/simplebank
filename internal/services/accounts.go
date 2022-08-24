@@ -1,94 +1,111 @@
 package services
 
 import (
-	"context"
+	"database/sql"
+	"fmt"
+	"net/http"
 
-	repository "github.com/srjchsv/simplebank/internal/repository/sqlc"
+	"github.com/gin-gonic/gin"
+	repository "github.com/srjchsv/simplebank/repository/sqlc"
 )
 
 type AccountsService struct {
-	store repository.Store
+	store *repository.Store
 }
 
 func NewAccountsService(store repository.Store) *AccountsService {
-	return &AccountsService{store: store}
+	return &AccountsService{store: &store}
 }
 
 type CreateAccountRequest struct {
 	Owner    string `json:"owner" binding:"required"`
-	Balance  int64  `json:"balance" binding:"required,min=0"`
-	Currency string `json:"currency" binding:"required,currency"`
+	Currency string `json:"currency" binding:"required,oneof=USD EUR"`
 }
 
-func (service *AccountsService) CreateAccount(req CreateAccountRequest) (repository.Account, error) {
+func (service *AccountsService) CreateAccount(ctx *gin.Context) {
+	var req CreateAccountRequest
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		ctx.JSON(http.StatusBadRequest, errorResponse(err))
+		return
+	}
 	arg := repository.CreateAccountParams{
 		Owner:    req.Owner,
-		Balance:  req.Balance,
+		Balance:  0,
 		Currency: req.Currency,
 	}
-	account, err := service.store.CreateAccount(context.Background(), arg)
+	account, err := service.store.CreateAccount(ctx, arg)
 	if err != nil {
-		return account, err
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		return
 	}
-	return account, nil
+	ctx.JSON(http.StatusOK, account)
 }
 
-type GetAccountRequest struct {
+type getAccountRequest struct {
 	ID int64 `uri:"id" binding:"required,min=1"`
 }
 
-func (service *AccountsService) GetAccount(req GetAccountRequest) (repository.Account, error) {
-	account, err := service.store.GetAccount(context.Background(), req.ID)
+func (service *AccountsService) GetAccount(ctx *gin.Context) {
+	var req getAccountRequest
+	if err := ctx.ShouldBindUri(&req); err != nil {
+		ctx.JSON(http.StatusBadRequest, errorResponse(err))
+		return
+	}
+	account, err := service.store.GetAccount(ctx, req.ID)
 	if err != nil {
-		return account, err
+		if err == sql.ErrNoRows {
+			ctx.JSON(http.StatusNotFound, errorResponse(err))
+			return
+		}
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		return
 	}
-	return account, nil
+	ctx.JSON(http.StatusOK, account)
 }
 
-type UpdateAccountRequest struct {
-	Owner   string `json:"owner" binding:"required"`
-	Balance int64  `json:"balance" binding:"required,min=0"`
-	ID      int64  `uri:"id" binding:"required,min=1"`
-}
-
-func (service *AccountsService) UpdateAccount(req UpdateAccountRequest) (repository.Account, error) {
-	arg := repository.UpdateAccountParams{
-		Owner:   req.Owner,
-		Balance: req.Balance,
-		ID:      req.ID,
-	}
-	account, err := service.store.UpdateAccount(context.Background(), arg)
-	if err != nil {
-		return account, err
-	}
-	return account, nil
-}
-
-type DeleteRequest struct {
+type deleteRequest struct {
 	ID int64 `uri:"id" binding:"required,min=1"`
 }
 
-func (service *AccountsService) DeleteAccount(req DeleteRequest) error {
-	err := service.store.DeleteAccount(context.Background(), req.ID)
-	if err != nil {
-		return err
+func (service *AccountsService) DeleteAccount(ctx *gin.Context) {
+	var req deleteRequest
+	if err := ctx.ShouldBindUri(&req); err != nil {
+		ctx.JSON(http.StatusBadRequest, errorResponse(err))
+		return
 	}
-	return nil
+	err := service.store.DeleteAccount(ctx, req.ID)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			ctx.JSON(http.StatusNotFound, errorResponse(err))
+			return
+		}
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		return
+	}
+	ctx.JSON(http.StatusOK, gin.H{
+		"message": fmt.Sprintf("account %v deleted successfully", req.ID),
+	})
 }
 
-type ListAccountRequest struct {
+type listAccountRequest struct {
 	PageID   int32 `form:"page_id" binding:"required,min=1"`
 	PageSize int32 `form:"page_size" binding:"required,min=5,max=10"`
 }
 
-func (service *AccountsService) ListAccounts(req ListAccountRequest) ([]repository.Account, error) {
+func (service *AccountsService) ListAccounts(ctx *gin.Context) {
+	var req listAccountRequest
+	if err := ctx.ShouldBindQuery(&req); err != nil {
+		ctx.JSON(http.StatusBadRequest, errorResponse(err))
+		return
+	}
 	arg := repository.ListAccountsParams{
 		Limit:  req.PageSize,
 		Offset: (req.PageID - 1) * req.PageSize,
 	}
-	account, err := service.store.ListAccounts(context.Background(), arg)
+	accounts, err := service.store.ListAccounts(ctx, arg)
 	if err != nil {
-		return account, err
+		ctx.JSON(http.StatusInternalServerError, errorResponse(err))
+		return
 	}
-	return account, nil
+	ctx.JSON(http.StatusOK, accounts)
 }
