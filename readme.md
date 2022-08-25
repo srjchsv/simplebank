@@ -17,6 +17,8 @@ Im learning to build a backend for a simplebank, from TECH SCHOOL's masterclass 
 
 ## To run server use `make server`
 
+### db migrations `make up`
+
 🚧 More features to be made... 🚧
 
 ### Below is the postgres database schema:
