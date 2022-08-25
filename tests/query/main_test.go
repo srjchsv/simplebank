@@ -2,13 +2,12 @@ package repository
 
 import (
 	"database/sql"
-	"fmt"
 	"os"
 	"testing"
 
-	"github.com/joho/godotenv"
 	"github.com/sirupsen/logrus"
-	repository "github.com/srjchsv/simplebank/repository/sqlc"
+	repository "github.com/srjchsv/simplebank/internal/repository/sqlc"
+	"github.com/srjchsv/simplebank/util"
 
 	_ "github.com/lib/pq"
 )
@@ -19,19 +18,13 @@ var (
 )
 
 func TestMain(m *testing.M) {
-	err := godotenv.Load("../../.env")
+	config, err := util.LoadConfig("../..")
 	if err != nil {
-		logrus.Fatal("cannot load env file")
+		logrus.Fatal("cannot load config: ", err)
 	}
-
-	dbConfigs := fmt.Sprintf("host=%s user=%s password=%s dbname=%s sslmode=disable",
-		os.Getenv("POSTGRES_HOST"),
-		os.Getenv("POSTGRES_USER"),
-		os.Getenv("POSTGRES_PASSWORD"),
-		os.Getenv("POSTGRES_DB"))
-	testDB, err = sql.Open(os.Getenv("DB_DRIVER"), dbConfigs)
+	testDB, err = sql.Open(config.DbDriver, config.PgUrl)
 	if err != nil {
-		logrus.Fatal("cannot connect to db")
+		logrus.Fatal("cannot connect to db", err)
 	}
 
 	testQueries = repository.New(testDB)

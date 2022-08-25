@@ -9,7 +9,13 @@ Im learning to build a backend for a simplebank, from TECH SCHOOL's masterclass 
 - TX lock handled.
 - Unit tests.
 - Github actions CI
-- Gin rest api
+- Gin rest api. Currently available:
+    - POST Create account `make create-account`
+    - GET get account by id `make get-account`
+    - GET get accounts in batches `make get-accounts`
+    - DELETE delete account by id `delete-account`
+
+## To run server use `make server`
 
 🚧 More features to be made... 🚧
 

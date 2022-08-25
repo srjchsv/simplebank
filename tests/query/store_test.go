@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"testing"
 
-	repository "github.com/srjchsv/simplebank/repository/sqlc"
+	repository "github.com/srjchsv/simplebank/internal/repository/sqlc"
 	"github.com/stretchr/testify/require"
 )
 
