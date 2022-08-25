@@ -13,7 +13,7 @@ Im learning to build a backend for a simplebank, from TECH SCHOOL's masterclass 
     - POST Create account `make create-account`
     - GET get account by id `make get-account`
     - GET get accounts in batches `make get-accounts`
-    - DELETE delete account by id `delete-account`
+    - DELETE delete account by id `make delete-account`
 
 ## To run server use `make server`
 
