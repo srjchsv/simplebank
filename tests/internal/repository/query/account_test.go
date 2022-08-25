@@ -17,6 +17,7 @@ func TestRepository_CreateAccount(t *testing.T) {
 }
 
 func TestRepository_UpdateAccount(t *testing.T) {
+	
 	account1 := createRandomAccount(t)
 
 	arg := repository.UpdateAccountParams{

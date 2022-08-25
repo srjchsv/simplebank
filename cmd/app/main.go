@@ -2,45 +2,29 @@ package main
 
 import (
 	"database/sql"
-	"fmt"
 
-	"os"
-	"strconv"
-
-	"github.com/joho/godotenv"
 	"github.com/sirupsen/logrus"
+	repository "github.com/srjchsv/simplebank/internal/repository/sqlc"
 	"github.com/srjchsv/simplebank/internal/server"
 	"github.com/srjchsv/simplebank/internal/services"
-	repository "github.com/srjchsv/simplebank/repository/sqlc"
+	"github.com/srjchsv/simplebank/util"
 
 	_ "github.com/lib/pq"
 )
 
 func main() {
-	//load environment variables
-	err := godotenv.Load(".env")
+	config, err := util.LoadConfig(".")
 	if err != nil {
-		logrus.Fatal("cannot load env file")
+		logrus.Fatal("cannot load config: ", err)
 	}
-
-	//db configs
-	dbConfigs := fmt.Sprintf("host=%s user=%s password=%s dbname=%s sslmode=disable",
-		os.Getenv("POSTGRES_HOST"),
-		os.Getenv("POSTGRES_USER"),
-		os.Getenv("POSTGRES_PASSWORD"),
-		os.Getenv("POSTGRES_DB"))
 	//db connection
-	conn, err := sql.Open(os.Getenv("DB_DRIVER"), dbConfigs)
+	conn, err := sql.Open(config.DbDriver, config.PgUrl)
 	if err != nil {
-		logrus.Fatal("cannot connect to db")
+		logrus.Fatal("cannot connect to db", err)
 	}
 	// Set db connection pool
-	pool, err := strconv.Atoi(os.Getenv("POSTGRES_POOL"))
-	if err != nil {
-		logrus.Fatal("error getting db pool env variable: ", err)
-	}
-	conn.SetMaxOpenConns(pool)
-	conn.SetMaxIdleConns(pool)
+	conn.SetMaxOpenConns(config.PgPool)
+	conn.SetMaxIdleConns(config.PgPool)
 
 	//initialize services and server
 	store := repository.NewStore(conn)
@@ -48,7 +32,7 @@ func main() {
 	server := server.NewServer(service)
 
 	//run server
-	err = server.Start(os.Getenv("ADDRESS"))
+	err = server.Start(config.ServersAddress)
 	if err != nil {
 		logrus.Fatal("cannot start server: ", err)
 	}
