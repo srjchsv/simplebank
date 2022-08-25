@@ -6,7 +6,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	repository "github.com/srjchsv/simplebank/repository/sqlc"
+	repository "github.com/srjchsv/simplebank/internal/repository/sqlc"
 )
 
 type AccountsService struct {
