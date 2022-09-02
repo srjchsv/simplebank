@@ -5,7 +5,6 @@ import (
 	"os"
 	"testing"
 
-	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 	repository "github.com/srjchsv/simplebank/internal/repository/sqlc"
 	"github.com/srjchsv/simplebank/util"
@@ -19,8 +18,7 @@ var (
 )
 
 func TestMain(m *testing.M) {
-	gin.SetMode(gin.TestMode)
-	config, err := util.LoadConfig("../../../..")
+	config, err := util.LoadConfig("../..")
 	if err != nil {
 		logrus.Fatal("cannot load config: ", err)
 	}

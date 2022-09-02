@@ -1,10 +1,10 @@
 version: 1
 packages:
   - name: "repository"
-    path: "./internal/repository/sqlc"
+    path: "./repository/sqlc"
     engine: "postgresql"
-    schema: "./internal/repository/migrations"
-    queries: "./internal/repository/query/"
+    schema: "./repository/migrations"
+    queries: "./repository/query/"
     emit_json_tags: true
     emit_prepared_queries: false
     emit_interface: true
