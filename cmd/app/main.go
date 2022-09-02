@@ -3,9 +3,10 @@ package main
 import (
 	"database/sql"
 
+	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
+	"github.com/srjchsv/simplebank/internal/handler"
 	repository "github.com/srjchsv/simplebank/internal/repository/sqlc"
-	"github.com/srjchsv/simplebank/internal/server"
 	"github.com/srjchsv/simplebank/internal/services"
 	"github.com/srjchsv/simplebank/util"
 
@@ -26,14 +27,13 @@ func main() {
 	conn.SetMaxOpenConns(config.PgPool)
 	conn.SetMaxIdleConns(config.PgPool)
 
-	//initialize services and server
+	//initialize store, services and server
 	store := repository.NewStore(conn)
-	service := services.NewService(store)
-	server := server.NewServer(service)
+	services := services.NewService(store)
+	handlers := handler.NewHandler(services)
 
 	//run server
-	err = server.Start(config.ServersAddress)
-	if err != nil {
-		logrus.Fatal("cannot start server: ", err)
-	}
+	r := gin.Default()
+	handlers.InitRouter(r)
+	logrus.Fatal(r.Run(config.ServersAddress))
 }

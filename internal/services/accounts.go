@@ -10,11 +10,11 @@ import (
 )
 
 type AccountsService struct {
-	store *repository.Store
+	store repository.Store
 }
 
 func NewAccountsService(store repository.Store) *AccountsService {
-	return &AccountsService{store: &store}
+	return &AccountsService{store: store}
 }
 
 type CreateAccountRequest struct {
