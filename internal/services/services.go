@@ -16,6 +16,6 @@ type Service struct {
 	Accounts
 }
 
-func NewService(store *repository.Store) *Service {
-	return &Service{Accounts: NewAccountsService(*store)}
+func NewService(store repository.Store) *Service {
+	return &Service{Accounts: NewAccountsService(store)}
 }

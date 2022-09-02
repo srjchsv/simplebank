@@ -1,4 +1,4 @@
-.PHONY: sqlc test server
+.PHONY: sqlc test server coverage up
 
 # SERVER
 server:
@@ -18,12 +18,18 @@ get-accounts:
 
 # TESTS
 test:
-	@go test -v  -cover -coverpkg=./... ./...
+	@docker compose up -d
+	@make up
+	@go test -v -cover  -coverpkg=./... ./...
+	@docker compose stop
 
 coverage:
-	@go test -v -coverprofile=coverage.out -coverpkg=./... ./...
+	@docker compose up -d
+	@make up
+	@go test -coverprofile=coverage.out -coverpkg=./... ./...
 	@go tool cover -html=coverage.out
 	@rm coverage.out
+	@docker compose stop
 
 # SQLC
 sqlc:
@@ -38,3 +44,7 @@ down:
 
 gooseinit:
 	goose -dir ./repository/migrations create init sql
+
+# MOCK
+mock:
+	@mockgen -source internal/repository/sqlc/store.go -destination tests/internal/repository/sqlc/mock/store.go -package repoMock -aux_files repository=internal/repository/sqlc/querier.go
