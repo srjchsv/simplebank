@@ -1,6 +1,7 @@
 package services
 
 import (
+	"github.com/gin-gonic/gin"
 	repository "github.com/srjchsv/simplebank/internal/repository/sqlc"
 )
 
@@ -16,6 +17,10 @@ type Transfers interface {
 	CreateTransfer(req TransferRequest) (repository.TransferTxResult, error)
 }
 
+type Transfers interface {
+	CreateTransfer(*gin.Context)
+}
+
 type Service struct {
 	Accounts
 	Transfers
@@ -23,7 +28,7 @@ type Service struct {
 
 func NewService(store repository.Store) *Service {
 	return &Service{
-		Accounts: NewAccountsService(store),
+		Accounts:  NewAccountsService(store),
 		Transfers: NewTransfersService(store),
 	}
 }

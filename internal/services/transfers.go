@@ -1,11 +1,13 @@
 package services
 
 import (
-	"context"
 	"database/sql"
 	"fmt"
+	"net/http"
 
+	"github.com/gin-gonic/gin"
 	repository "github.com/srjchsv/simplebank/internal/repository/sqlc"
+	"github.com/srjchsv/simplebank/internal/services/responses"
 )
 
 type TransfersService struct {
@@ -16,45 +18,53 @@ func NewTransfersService(store repository.Store) *TransfersService {
 	return &TransfersService{store: store}
 }
 
-type TransferRequest struct {
+type transferRequest struct {
 	FromAccountID int64  `json:"from_account_id" binding:"required,min=1"`
 	ToAccountID   int64  `json:"to_account_id" binding:"required,min=1"`
 	Amount        int64  `json:"amount" binding:"required,gt=0"`
 	Currency      string `json:"currency" binding:"required,currency"`
 }
 
-func (service *TransfersService) CreateTransfer(req TransferRequest) (repository.TransferTxResult, error) {
-	fromAccount, err := service.validAccount(context.Background(), req.FromAccountID, req.Currency)
-	if err != nil || !fromAccount {
-		return repository.TransferTxResult{}, err
+func (service *TransfersService) CreateTransfer(ctx *gin.Context) {
+	var req transferRequest
+	if err := ctx.ShouldBindJSON(&req); err != nil {
+		ctx.JSON(http.StatusBadRequest, responses.ErrorResponse(err))
+		return
 	}
-	toAccount, err := service.validAccount(context.Background(), req.ToAccountID, req.Currency)
-	if err != nil || !toAccount {
-		return repository.TransferTxResult{}, err
+	if !service.validAccount(ctx, req.FromAccountID, req.Currency) {
+		return
 	}
+	if !service.validAccount(ctx, req.ToAccountID, req.Currency) {
+		return
+	}
+
 	arg := repository.TransferTxParams{
 		FromAccountID: req.FromAccountID,
 		ToAccountID:   req.ToAccountID,
 		Amount:        req.Amount,
 	}
-	result, err := service.store.TransferTx(context.Background(), arg)
+	result, err := service.store.TransferTx(ctx, arg)
 	if err != nil {
-		return result, err
+		ctx.JSON(http.StatusInternalServerError, responses.ErrorResponse(err))
+		return
 	}
-	return result, nil
+	ctx.JSON(http.StatusOK, result)
 }
 
-func (service *TransfersService) validAccount(ctx context.Context, accountID int64, currency string) (bool, error) {
+func (service *TransfersService) validAccount(ctx *gin.Context, accountID int64, currency string) bool {
 	account, err := service.store.GetAccount(ctx, accountID)
 	if err != nil {
 		if err == sql.ErrNoRows {
-			return false, sql.ErrNoRows
+			ctx.JSON(http.StatusNotFound, responses.ErrorResponse(err))
+			return false
 		}
-		return false, err
+		ctx.JSON(http.StatusInternalServerError, responses.ErrorResponse(err))
+		return false
 	}
 	if account.Currency != currency {
-		err := fmt.Errorf("currency mismatch")
-		return false, err
+		err := fmt.Errorf("account [%d] currency mismatch: %s vs %s", accountID, account.Currency, currency)
+		ctx.JSON(http.StatusBadRequest, responses.ErrorResponse(err))
+		return false
 	}
-	return true, nil
+	return true
 }
