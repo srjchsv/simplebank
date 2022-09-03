@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/pioz/faker"
-	repository "github.com/srjchsv/simplebank/repository/sqlc"
+	repository "github.com/srjchsv/simplebank/internal/repository/sqlc"
 	"github.com/srjchsv/simplebank/util"
 	"github.com/stretchr/testify/require"
 )
@@ -17,7 +17,6 @@ func TestRepository_CreateAccount(t *testing.T) {
 }
 
 func TestRepository_UpdateAccount(t *testing.T) {
-	
 	account1 := createRandomAccount(t)
 
 	arg := repository.UpdateAccountParams{
