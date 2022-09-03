@@ -40,6 +40,9 @@ coverage:
 	@rm coverage.out
 	@docker compose stop
 
+testCI:
+	@go test -v -cover  -coverpkg=./... ./...
+
 # SQLC
 sqlc:
 	@sqlc generate

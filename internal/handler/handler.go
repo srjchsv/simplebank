@@ -17,21 +17,19 @@ func NewHandler(services *services.Service) *Handler {
 }
 
 func (h *Handler) InitRouter(app *gin.Engine) *gin.Engine {
-
 	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
 		v.RegisterValidation("currency", validate.ValidCurrency)
 	}
 	//Accounts route
 	accounts := app.Group("/accounts")
-	accounts.POST("", h.services.Accounts.CreateAccount)
-	accounts.GET("/:id", h.services.Accounts.GetAccount)
-	accounts.PUT("/:id", h.services.Accounts.UpdateAccount)
-	accounts.DELETE("/:id", h.services.Accounts.DeleteAccount)
-	accounts.GET("", h.services.Accounts.ListAccounts)
-
+	accounts.POST("", h.CreateAccount)
+	accounts.GET("/:id", h.GetAccount)
+	accounts.PUT("/:id", h.UpdateAccount)
+	accounts.DELETE("/:id", h.DeleteAccount)
+	accounts.GET("", h.ListAccounts)
 	//Transfers route
 	transfers := app.Group("/transfers")
-	transfers.POST("", h.services.Transfers.CreateTransfer)
+	transfers.POST("", h.CreateTransfer)
 
 	return app
 }

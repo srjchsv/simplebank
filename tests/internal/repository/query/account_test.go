@@ -21,6 +21,7 @@ func TestRepository_UpdateAccount(t *testing.T) {
 
 	arg := repository.UpdateAccountParams{
 		ID:      account1.ID,
+		Owner:   account1.Owner,
 		Balance: faker.Int64InRange(555, 888),
 	}
 	updated, err := testQueries.UpdateAccount(context.Background(), arg)
