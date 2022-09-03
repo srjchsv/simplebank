@@ -1,11 +1,20 @@
-.PHONY: sqlc test server coverage up
+.PHONY: sqlc test server coverage up transfer
 
 # SERVER
 server:
+	@docker compose up -d
+	@make up
 	@go run cmd/app/*.go
+	@docker compose stop
 
 create-account:
-	@curl -v -X POST -H 'Accect: application/json' -H 'Content-Type: application/json' --data '{"owner":"Tobby","currency":"USD"}' http://localhost:8080/accounts
+	@curl -v -X POST -H 'Accept: application/json' -H 'Content-Type: application/json' --data '{"owner":"Tobby","balance":777,"currency":"USD"}' http://localhost:8080/accounts
+
+update-account:
+	@curl -v -X PUT -H 'Accept: application/json' -H 'Content-Type: application/json' --data '{"id":1,"owner":"Tobby","balance":88888}' http://localhost:8080/accounts/1
+
+transfer:
+	@curl -v  POST 'localhost:8080/transfers' -H 'Accept: application/json' -H'Content-Type: application/json' --data '{"from_account_id": 1,"to_account_id": 2,"amount": 10,"currency": "CAD"}'
 
 get-account:
 	@curl -v -X GET 'localhost:8080/accounts/1' 

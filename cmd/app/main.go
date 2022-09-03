@@ -34,6 +34,8 @@ func main() {
 
 	//run server
 	r := gin.Default()
+
+	
 	handlers.InitRouter(r)
 	logrus.Fatal(r.Run(config.ServersAddress))
 }

@@ -8,14 +8,23 @@ import (
 type Accounts interface {
 	CreateAccount(*gin.Context)
 	GetAccount(*gin.Context)
+	UpdateAccount(*gin.Context)
 	DeleteAccount(*gin.Context)
 	ListAccounts(*gin.Context)
 }
 
+type Transfers interface {
+	CreateTransfer(*gin.Context)
+}
+
 type Service struct {
 	Accounts
+	Transfers
 }
 
 func NewService(store repository.Store) *Service {
-	return &Service{Accounts: NewAccountsService(store)}
+	return &Service{
+		Accounts:  NewAccountsService(store),
+		Transfers: NewTransfersService(store),
+	}
 }

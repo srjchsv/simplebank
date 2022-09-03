@@ -30,8 +30,8 @@ RETURNING *;
 
 -- name: UpdateAccount :one
 UPDATE accounts
-SET balance = $1
-WHERE id = $2
+SET balance = $1 , owner = $2 
+WHERE id = $3
 RETURNING *;
 
 -- name: DeleteAccount :exec

@@ -7,13 +7,19 @@ Im learning to build a backend for a simplebank, from TECH SCHOOL's masterclass 
 - Generated CRUD queries using SQLC.
 - Implemented balance transfer transaction.
 - TX lock handled.
-- Unit tests.
+- Unit and integration tests.
 - Github actions CI
 - Gin rest api. Currently available:
+    
+    Accounts management:
     - POST Create account `make create-account`
     - GET get account by id `make get-account`
+    - PUT Update account by id  `make update-account`
     - GET get accounts in batches `make get-accounts`
     - DELETE delete account by id `make delete-account`
+
+    Balance transfers management:
+    - POST Transfer balance from-to account `make transfer`
 
 ## To run server use `make server`
 
