@@ -31,7 +31,7 @@ func main() {
 	store := repository.NewStore(conn)
 	services := services.NewService(store)
 	handlers := handler.NewHandler(services)
-	
+
 	//run server
 	r := gin.Default()
 	handlers.InitRouter(r)
