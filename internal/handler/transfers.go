@@ -2,6 +2,7 @@ package handler
 
 import (
 	"database/sql"
+	"errors"
 	"fmt"
 	"net/http"
 
@@ -12,11 +13,16 @@ import (
 
 func (h *Handler) CreateTransfer(ctx *gin.Context) {
 	var req services.TransferRequest
+	userID := ctx.GetInt("UserID")
+	if int(req.FromAccountID) != userID {
+		ctx.JSON(http.StatusBadRequest, responses.ErrorResponse(errors.New("wrong id")))
+		return
+	}
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		ctx.JSON(http.StatusBadRequest, responses.ErrorResponse(err))
 		return
 	}
-	result, err := h.services.Transfers.CreateTransfer(req)
+	result, err := h.services.Accounts.CreateTransfer(req)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			ctx.JSON(http.StatusNotFound, responses.ErrorResponse(err))

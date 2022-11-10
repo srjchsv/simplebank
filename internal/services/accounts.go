@@ -18,6 +18,8 @@ type CreateAccountRequest struct {
 	Owner    string `json:"owner" binding:"required"`
 	Balance  int64  `json:"balance" binding:"required,min=0"`
 	Currency string `json:"currency" binding:"required,currency"`
+	Username string `json:"username" binding:"required"`
+	Password string `json:"password" binding:"required"`
 }
 
 func (service *AccountsService) CreateAccount(req CreateAccountRequest) (repository.Account, error) {

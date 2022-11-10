@@ -8,14 +8,6 @@ import (
 	repository "github.com/srjchsv/simplebank/internal/repository/sqlc"
 )
 
-type TransfersService struct {
-	store repository.Store
-}
-
-func NewTransfersService(store repository.Store) *TransfersService {
-	return &TransfersService{store: store}
-}
-
 type TransferRequest struct {
 	FromAccountID int64  `json:"from_account_id" binding:"required,min=1"`
 	ToAccountID   int64  `json:"to_account_id" binding:"required,min=1"`
@@ -23,7 +15,7 @@ type TransferRequest struct {
 	Currency      string `json:"currency" binding:"required,currency"`
 }
 
-func (service *TransfersService) CreateTransfer(req TransferRequest) (repository.TransferTxResult, error) {
+func (service *AccountsService) CreateTransfer(req TransferRequest) (repository.TransferTxResult, error) {
 	fromAccount, err := service.validAccount(context.Background(), req.FromAccountID, req.Currency)
 	if err != nil || !fromAccount {
 		return repository.TransferTxResult{}, err
@@ -44,7 +36,7 @@ func (service *TransfersService) CreateTransfer(req TransferRequest) (repository
 	return result, nil
 }
 
-func (service *TransfersService) validAccount(ctx context.Context, accountID int64, currency string) (bool, error) {
+func (service *AccountsService) validAccount(ctx context.Context, accountID int64, currency string) (bool, error) {
 	account, err := service.store.GetAccount(ctx, accountID)
 	if err != nil {
 		if err == sql.ErrNoRows {

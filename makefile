@@ -1,3 +1,5 @@
+DB_PORT=5450
+
 .PHONY: sqlc test server coverage up transfer
 
 # SERVER
@@ -5,19 +7,21 @@ server:
 	@docker compose up -d
 	@make up
 	@go run cmd/app/*.go
-	@docker compose stop
 
-create-account:
-	@curl -v -X POST -H 'Accept: application/json' -H 'Content-Type: application/json' --data '{"owner":"Tobby","balance":777,"currency":"USD"}' http://localhost:8080/accounts
+signup:
+	@curl -v -X POST -H 'Accept: application/json' -H 'Content-Type: application/json' --data '{"owner":"Tobby","username":"Tobb","password":"123","balance":777,"currency":"USD"}' http://localhost:8080/auth/signup
+
+signin:
+	@curl -v -c cookie.txt -X POST -H 'Accept: application/json' -H 'Content-Type: application/json' --data '{"username":"Tobb","password":"123"}' http://localhost:8080/auth/signin
 
 update-account:
-	@curl -v -X PUT -H 'Accept: application/json' -H 'Content-Type: application/json' --data '{"id":1,"owner":"Tobby","balance":88888}' http://localhost:8080/accounts/1
+	@curl -v -b ./cookie.txt -X PUT -H 'Accept: application/json' -H 'Content-Type: application/json' --data '{"id":7,"owner":"Johny","balance":132}' http://localhost:8080/accounts/7
 
 transfer:
-	@curl -v  POST 'localhost:8080/transfers' -H 'Accept: application/json' -H'Content-Type: application/json' --data '{"from_account_id": 1,"to_account_id": 2,"amount": 10,"currency": "CAD"}'
+	@curl -v  POST 'localhost:8080/accounts/transfers' -H 'Accept: application/json' -H'Content-Type: application/json' --data '{"from_account_id": 1,"to_account_id": 2,"amount": 10,"currency": "CAD"}'
 
 get-account:
-	@curl -v -X GET 'localhost:8080/accounts/1' 
+	@curl -v -b ./cookie.txt -X GET 'localhost:8080/accounts/1' 
 	
 delete-account:
 	@curl -v -X DELETE 'localhost:8080/accounts/1' 
@@ -49,10 +53,10 @@ sqlc:
 
 # MIGRATIONS
 up:
-	@goose -dir ./internal/repository/migrations postgres "postgresql://user:password@localhost:5432/db?sslmode=disable" up
+	@goose -dir ./internal/repository/migrations postgres "postgresql://user:password@localhost:${DB_PORT}/db?sslmode=disable" up
 
 down:
-	@goose -dir ./internal/repository/migrations  postgres "postgresql://user:password@localhost:5432/db?sslmode=disable" down
+	@goose -dir ./internal/repository/migrations  postgres "postgresql://user:password@localhost:${DB_PORT}/db?sslmode=disable" down
 
 gooseinit:
 	goose -dir ./repository/migrations create init sql

@@ -21,15 +21,16 @@ func (h *Handler) InitRouter(app *gin.Engine) *gin.Engine {
 		v.RegisterValidation("currency", validate.ValidCurrency)
 	}
 	//Accounts route
-	accounts := app.Group("/accounts")
-	accounts.POST("", h.CreateAccount)
+	auth := app.Group("/auth")
+	auth.POST("/signup", h.CreateAccount)
+	auth.POST("/signin", h.SignIn)
+
+	accounts := app.Group("/accounts", h.UserIdentity)
 	accounts.GET("/:id", h.GetAccount)
 	accounts.PUT("/:id", h.UpdateAccount)
 	accounts.DELETE("/:id", h.DeleteAccount)
 	accounts.GET("", h.ListAccounts)
-	//Transfers route
-	transfers := app.Group("/transfers")
-	transfers.POST("", h.CreateTransfer)
+	accounts.POST("/transfers", h.CreateTransfer)
 
 	return app
 }

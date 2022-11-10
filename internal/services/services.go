@@ -11,26 +11,30 @@ type Accounts interface {
 	DeleteAccount(req DeleteRequest) error
 	ListAccounts(req ListAccountRequest) ([]repository.Account, error)
 <<<<<<< HEAD
+<<<<<<< HEAD
 }
 
 type Transfers interface {
 	CreateTransfer(req TransferRequest) (repository.TransferTxResult, error)
 =======
 >>>>>>> 87ef88a (project structure)
+=======
+	CreateTransfer(req TransferRequest) (repository.TransferTxResult, error)
+>>>>>>> f0273f0 (auth service)
 }
 
-type Transfers interface {
-	CreateTransfer(req TransferRequest) (repository.TransferTxResult, error)
+type Authorization interface {
+	SignIn()
+	UserIdentity()
 }
 
 type Service struct {
 	Accounts
-	Transfers
+	Authorization
 }
 
 func NewService(store repository.Store) *Service {
 	return &Service{
-		Accounts: NewAccountsService(store),
-		Transfers: NewTransfersService(store),
+		Accounts:  NewAccountsService(store),
 	}
 }
