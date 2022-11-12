@@ -2,7 +2,6 @@ package handler
 
 import (
 	"database/sql"
-	"errors"
 	"fmt"
 	"net/http"
 
@@ -13,11 +12,6 @@ import (
 
 func (h *Handler) CreateTransfer(ctx *gin.Context) {
 	var req services.TransferRequest
-	userID := ctx.GetInt("UserID")
-	if int(req.FromAccountID) != userID {
-		ctx.JSON(http.StatusBadRequest, responses.ErrorResponse(errors.New("wrong id")))
-		return
-	}
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		ctx.JSON(http.StatusBadRequest, responses.ErrorResponse(err))
 		return

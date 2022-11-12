@@ -9,6 +9,7 @@ import (
 	reflect "reflect"
 
 	gomock "github.com/golang/mock/gomock"
+	repository "github.com/srjchsv/simplebank/internal/repository/sqlc"
 	sqlc "github.com/srjchsv/simplebank/internal/repository/sqlc"
 )
 
@@ -36,10 +37,10 @@ func (m *MockStore) EXPECT() *MockStoreMockRecorder {
 }
 
 // AddAccountBalance mocks base method.
-func (m *MockStore) AddAccountBalance(ctx context.Context, arg sqlc.AddAccountBalanceParams) (sqlc.Account, error) {
+func (m *MockStore) AddAccountBalance(ctx context.Context, arg repository.AddAccountBalanceParams) (repository.Account, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "AddAccountBalance", ctx, arg)
-	ret0, _ := ret[0].(sqlc.Account)
+	ret0, _ := ret[0].(repository.Account)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -51,10 +52,10 @@ func (mr *MockStoreMockRecorder) AddAccountBalance(ctx, arg interface{}) *gomock
 }
 
 // CreateAccount mocks base method.
-func (m *MockStore) CreateAccount(ctx context.Context, arg sqlc.CreateAccountParams) (sqlc.Account, error) {
+func (m *MockStore) CreateAccount(ctx context.Context, arg repository.CreateAccountParams) (repository.Account, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateAccount", ctx, arg)
-	ret0, _ := ret[0].(sqlc.Account)
+	ret0, _ := ret[0].(repository.Account)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -66,10 +67,10 @@ func (mr *MockStoreMockRecorder) CreateAccount(ctx, arg interface{}) *gomock.Cal
 }
 
 // CreateEntry mocks base method.
-func (m *MockStore) CreateEntry(ctx context.Context, arg sqlc.CreateEntryParams) (sqlc.Entry, error) {
+func (m *MockStore) CreateEntry(ctx context.Context, arg repository.CreateEntryParams) (repository.Entry, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateEntry", ctx, arg)
-	ret0, _ := ret[0].(sqlc.Entry)
+	ret0, _ := ret[0].(repository.Entry)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -81,10 +82,10 @@ func (mr *MockStoreMockRecorder) CreateEntry(ctx, arg interface{}) *gomock.Call 
 }
 
 // CreateTransfer mocks base method.
-func (m *MockStore) CreateTransfer(ctx context.Context, arg sqlc.CreateTransferParams) (sqlc.Transfer, error) {
+func (m *MockStore) CreateTransfer(ctx context.Context, arg repository.CreateTransferParams) (repository.Transfer, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "CreateTransfer", ctx, arg)
-	ret0, _ := ret[0].(sqlc.Transfer)
+	ret0, _ := ret[0].(repository.Transfer)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -110,10 +111,10 @@ func (mr *MockStoreMockRecorder) DeleteAccount(ctx, id interface{}) *gomock.Call
 }
 
 // GetAccount mocks base method.
-func (m *MockStore) GetAccount(ctx context.Context, id int64) (sqlc.Account, error) {
+func (m *MockStore) GetAccount(ctx context.Context, id int64) (repository.Account, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetAccount", ctx, id)
-	ret0, _ := ret[0].(sqlc.Account)
+	ret0, _ := ret[0].(repository.Account)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -125,10 +126,10 @@ func (mr *MockStoreMockRecorder) GetAccount(ctx, id interface{}) *gomock.Call {
 }
 
 // GetAccountForUpdate mocks base method.
-func (m *MockStore) GetAccountForUpdate(ctx context.Context, id int64) (sqlc.Account, error) {
+func (m *MockStore) GetAccountForUpdate(ctx context.Context, id int64) (repository.Account, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetAccountForUpdate", ctx, id)
-	ret0, _ := ret[0].(sqlc.Account)
+	ret0, _ := ret[0].(repository.Account)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -140,10 +141,10 @@ func (mr *MockStoreMockRecorder) GetAccountForUpdate(ctx, id interface{}) *gomoc
 }
 
 // GetEntry mocks base method.
-func (m *MockStore) GetEntry(ctx context.Context, id int64) (sqlc.Entry, error) {
+func (m *MockStore) GetEntry(ctx context.Context, id int64) (repository.Entry, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetEntry", ctx, id)
-	ret0, _ := ret[0].(sqlc.Entry)
+	ret0, _ := ret[0].(repository.Entry)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -155,10 +156,10 @@ func (mr *MockStoreMockRecorder) GetEntry(ctx, id interface{}) *gomock.Call {
 }
 
 // GetTransfer mocks base method.
-func (m *MockStore) GetTransfer(ctx context.Context, id int64) (sqlc.Transfer, error) {
+func (m *MockStore) GetTransfer(ctx context.Context, id int64) (repository.Transfer, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "GetTransfer", ctx, id)
-	ret0, _ := ret[0].(sqlc.Transfer)
+	ret0, _ := ret[0].(repository.Transfer)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -170,10 +171,10 @@ func (mr *MockStoreMockRecorder) GetTransfer(ctx, id interface{}) *gomock.Call {
 }
 
 // ListAccounts mocks base method.
-func (m *MockStore) ListAccounts(ctx context.Context, arg sqlc.ListAccountsParams) ([]sqlc.Account, error) {
+func (m *MockStore) ListAccounts(ctx context.Context, arg repository.ListAccountsParams) ([]repository.Account, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ListAccounts", ctx, arg)
-	ret0, _ := ret[0].([]sqlc.Account)
+	ret0, _ := ret[0].([]repository.Account)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -185,10 +186,10 @@ func (mr *MockStoreMockRecorder) ListAccounts(ctx, arg interface{}) *gomock.Call
 }
 
 // ListEntries mocks base method.
-func (m *MockStore) ListEntries(ctx context.Context, arg sqlc.ListEntriesParams) ([]sqlc.Entry, error) {
+func (m *MockStore) ListEntries(ctx context.Context, arg repository.ListEntriesParams) ([]repository.Entry, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ListEntries", ctx, arg)
-	ret0, _ := ret[0].([]sqlc.Entry)
+	ret0, _ := ret[0].([]repository.Entry)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -200,10 +201,10 @@ func (mr *MockStoreMockRecorder) ListEntries(ctx, arg interface{}) *gomock.Call 
 }
 
 // ListTransfers mocks base method.
-func (m *MockStore) ListTransfers(ctx context.Context, arg sqlc.ListTransfersParams) ([]sqlc.Transfer, error) {
+func (m *MockStore) ListTransfers(ctx context.Context, arg repository.ListTransfersParams) ([]repository.Transfer, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "ListTransfers", ctx, arg)
-	ret0, _ := ret[0].([]sqlc.Transfer)
+	ret0, _ := ret[0].([]repository.Transfer)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -230,10 +231,10 @@ func (mr *MockStoreMockRecorder) TransferTx(ctx, arg interface{}) *gomock.Call {
 }
 
 // UpdateAccount mocks base method.
-func (m *MockStore) UpdateAccount(ctx context.Context, arg sqlc.UpdateAccountParams) (sqlc.Account, error) {
+func (m *MockStore) UpdateAccount(ctx context.Context, arg repository.UpdateAccountParams) (repository.Account, error) {
 	m.ctrl.T.Helper()
 	ret := m.ctrl.Call(m, "UpdateAccount", ctx, arg)
-	ret0, _ := ret[0].(sqlc.Account)
+	ret0, _ := ret[0].(repository.Account)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }

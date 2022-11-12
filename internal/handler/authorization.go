@@ -3,13 +3,14 @@ package handler
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"os"
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/sirupsen/logrus"
 	"github.com/srjchsv/simplebank/internal/services/responses"
 	"github.com/srjchsv/simplebank/util"
 )
@@ -46,7 +47,7 @@ func (h *Handler) UserIdentity(ctx *gin.Context) {
 		Value:  token,
 		MaxAge: cookieAgeSignIn,
 	}
-	requestUrl := fmt.Sprintf("http://localhost:%d/api", util.AuthPort())
+	requestUrl := fmt.Sprintf("http://%s:%d/api", os.Getenv("AUTH_HOST"), util.AuthPort())
 	req, err := http.NewRequest("GET", requestUrl, nil)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, responses.ErrorResponse(err))
@@ -61,22 +62,6 @@ func (h *Handler) UserIdentity(ctx *gin.Context) {
 		return
 	}
 	defer response.Body.Close()
-
-	body, err := ioutil.ReadAll(response.Body)
-	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, responses.ErrorResponse(err))
-		ctx.AbortWithStatus(http.StatusInternalServerError)
-		return
-	}
-	var id authId
-	json.Unmarshal([]byte(body), &id)
-	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, responses.ErrorResponse(err))
-		ctx.AbortWithStatus(http.StatusInternalServerError)
-		return
-	}
-	ctx.Set("UserID", id.Id)
-	logrus.Info(id.Id)
 }
 
 func (h *Handler) SignIn(ctx *gin.Context) {
@@ -85,7 +70,7 @@ func (h *Handler) SignIn(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, responses.ErrorResponse(err))
 		return
 	}
-	requestUrl := fmt.Sprintf("http://localhost:%d/auth/sign-in", util.AuthPort())
+	requestUrl := fmt.Sprintf("http://%s:%d/auth/sign-in", os.Getenv("AUTH_HOST"), util.AuthPort())
 
 	postBody, err := json.Marshal(map[string]string{
 		"username": req.Username,
@@ -100,11 +85,17 @@ func (h *Handler) SignIn(ctx *gin.Context) {
 		ctx.JSON(http.StatusInternalServerError, responses.ErrorResponse(err))
 		return
 	}
+
+	if response.StatusCode != 200 {
+		ctx.JSON(http.StatusBadRequest, responses.ErrorResponse(err))
+		return
+	}
 	body, err := ioutil.ReadAll(response.Body)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, responses.ErrorResponse(err))
 		return
 	}
+
 	var token token
 	json.Unmarshal([]byte(body), &token)
 	if err != nil {
@@ -120,13 +111,14 @@ func (h *Handler) SignIn(ctx *gin.Context) {
 		true,
 		true,
 	)
+
 	ctx.JSON(http.StatusOK, map[string]interface{}{
 		"token": token.Token,
 	})
 }
 
 func SignUp(name, username, password string) (int, error) {
-	requestURL := fmt.Sprintf("http://localhost:%d/auth/sign-up", util.AuthPort())
+	requestURL := fmt.Sprintf("http://%s:%d/auth/sign-up", os.Getenv("AUTH_HOST"), util.AuthPort())
 
 	postBody, _ := json.Marshal(map[string]string{
 		"name":     name,
@@ -138,7 +130,9 @@ func SignUp(name, username, password string) (int, error) {
 	if err != nil {
 		return 0, err
 	}
-
+	if response.StatusCode != 200 {
+		return 0, errors.New("auth error")
+	}
 	body, err := ioutil.ReadAll(response.Body)
 	if err != nil {
 		return 0, err

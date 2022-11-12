@@ -2,21 +2,26 @@ package repository
 
 import (
 	"context"
-	"database/sql"
 	"fmt"
+
+	"github.com/jmoiron/sqlx"
+	// 1. dont know any other way to generate mocks
+	//repository "github.com/srjchsv/simplebank/internal/repository"
 )
 
 type Store interface {
+	// 2. dont know any other way to generate mocks
+	//repository.Querier
 	Querier
 	TransferTx(ctx context.Context, arg TransferTxParams) (TransferTxResult, error)
 }
 
 type SQLStore struct {
 	*Queries
-	db *sql.DB
+	db *sqlx.DB
 }
 
-func NewStore(db *sql.DB) *SQLStore {
+func NewStore(db *sqlx.DB) *SQLStore {
 	return &SQLStore{db: db, Queries: New(db)}
 }
 

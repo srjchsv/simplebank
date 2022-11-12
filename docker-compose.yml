@@ -10,5 +10,40 @@ services:
       - ${POSTGRES_PORT}
     volumes:
       - db:/var/lib/postgres/data
+    hostname: localhost
+  bank:
+    build: .
+    restart: always
+    depends_on:
+      - db
+    env_file:
+      - .env
+    ports:
+     - 8080:8080
+    hostname: localhost
+  db-auth:
+    image: postgres:14.4-alpine
+    container_name: db-auth
+    restart: always
+    env_file:
+      - ./service/.env
+    ports:
+      - 5432:5432
+    volumes:
+      - db-auth:/var/lib/postgres/data
+    hostname: localhost
+  auth:
+    build: ./service
+    env_file:
+      - ./service/.env
+    environment:
+      - POSTGRES_HOST=db-auth 
+    ports:
+     - 5000:5000
+    restart: always
+    depends_on:
+      - db-auth
+    hostname: localhost
 volumes:
   db:
+  db-auth:

@@ -14,6 +14,10 @@ func init() {
 
 type Config struct {
 	PgUrl             string `mapstructure:"POSTGRES_URL"`
+	PgUsername        string `mapstructure:"POSTGRES_USER"`
+	PgPassword        string `mapstructure:"POSTGRES_PASSWORD"`
+	PgHost            string `mapstructure:"POSTGRES_HOST"`
+	PgName            string `mapstructure:"POSTGRES_DB"`
 	PgPool            int    `mapstructure:"POSTGRES_POOL"`
 	DbDriver          string `mapstructure:"DB_DRIVER"`
 	ServersAddress    string `mapstructure:"ADDRESS"`

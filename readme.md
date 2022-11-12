@@ -7,12 +7,13 @@
 - TX lock handled.
 - Unit and integration tests.
 - Github actions CI
-- REST api. Currently available:
+- REST api. 
+- Authorization and authentification with https://github.com/srjchsv/service  microservice.
 
-   <em>First run the authorization mircoservice https://github.com/srjchsv/service
-to be able to signup and signin, and use all other features.</em>
-
+## To run use `make docker`
+it would run simple-bank and auth-service and make migrations.
 ![simplebank schema](static/simple-bank-schema.jpeg "simplebank database schema")
+
 
 
 ### Accounts management:
@@ -26,11 +27,7 @@ to be able to signup and signin, and use all other features.</em>
 ### Balance transfers management:
     - POST Transfer balance from-to account `make transfer`
 
-## To run server use `make server`
 
-### db migrations `make up`
-
-🚧 More features to be made... 🚧
 
 ### Below is the postgres database schema:
 
