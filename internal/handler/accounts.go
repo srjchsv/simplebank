@@ -16,12 +16,20 @@ func (h *Handler) CreateAccount(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, responses.ErrorResponse(err))
 		return
 	}
+	id, err := SignUp(req.Owner, req.Username, req.Password)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, responses.ErrorResponse(err))
+		return
+	}
 	account, err := h.services.Accounts.CreateAccount(req)
 	if err != nil {
 		ctx.JSON(http.StatusInternalServerError, responses.ErrorResponse(err))
 		return
 	}
-	ctx.JSON(http.StatusOK, account)
+	ctx.JSON(http.StatusOK, map[string]interface{}{
+		"account": account,
+		"id":      id,
+	})
 }
 
 func (h *Handler) GetAccount(ctx *gin.Context) {

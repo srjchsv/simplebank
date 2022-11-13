@@ -16,7 +16,7 @@ func (h *Handler) CreateTransfer(ctx *gin.Context) {
 		ctx.JSON(http.StatusBadRequest, responses.ErrorResponse(err))
 		return
 	}
-	result, err := h.services.Transfers.CreateTransfer(req)
+	result, err := h.services.Accounts.CreateTransfer(req)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			ctx.JSON(http.StatusNotFound, responses.ErrorResponse(err))

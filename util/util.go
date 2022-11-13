@@ -4,6 +4,7 @@ import (
 	"math/rand"
 	"time"
 
+	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
 )
 
@@ -12,10 +13,23 @@ func init() {
 }
 
 type Config struct {
-	PgUrl          string `mapstructure:"POSTGRES_URL"`
-	PgPool         int    `mapstructure:"POSTGRES_POOL"`
-	DbDriver       string `mapstructure:"DB_DRIVER"`
-	ServersAddress string `mapstructure:"ADDRESS"`
+	PgUrl             string `mapstructure:"POSTGRES_URL"`
+	PgUsername        string `mapstructure:"POSTGRES_USER"`
+	PgPassword        string `mapstructure:"POSTGRES_PASSWORD"`
+	PgHost            string `mapstructure:"POSTGRES_HOST"`
+	PgName            string `mapstructure:"POSTGRES_DB"`
+	PgPool            int    `mapstructure:"POSTGRES_POOL"`
+	DbDriver          string `mapstructure:"DB_DRIVER"`
+	ServersAddress    string `mapstructure:"ADDRESS"`
+	AuthorizationPort int    `mapstructure:"AUTHORIZATION_PORT"`
+}
+
+func AuthPort() int {
+	config, err := LoadConfig(".")
+	if err != nil {
+		logrus.Fatal("cannot load config: ", err)
+	}
+	return config.AuthorizationPort
 }
 
 func LoadConfig(path string) (config Config, err error) {

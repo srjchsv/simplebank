@@ -1,11 +1,11 @@
 package repository
 
 import (
-	"database/sql"
 	"os"
 	"testing"
 
 	"github.com/gin-gonic/gin"
+	"github.com/jmoiron/sqlx"
 	"github.com/sirupsen/logrus"
 	repository "github.com/srjchsv/simplebank/internal/repository/sqlc"
 	"github.com/srjchsv/simplebank/util"
@@ -15,7 +15,7 @@ import (
 
 var (
 	testQueries *repository.Queries
-	testDB      *sql.DB
+	testDB      *sqlx.DB
 )
 
 func TestMain(m *testing.M) {
@@ -24,7 +24,7 @@ func TestMain(m *testing.M) {
 	if err != nil {
 		logrus.Fatal("cannot load config: ", err)
 	}
-	testDB, err = sql.Open(config.DbDriver, config.PgUrl)
+	testDB, err = sqlx.Open(config.DbDriver, config.PgUrl)
 	if err != nil {
 		logrus.Fatal("cannot connect to db", err)
 	}

@@ -1,25 +1,46 @@
 package main
 
 import (
-	"database/sql"
+	"fmt"
 
 	"github.com/gin-gonic/gin"
+	"github.com/jmoiron/sqlx"
+	_ "github.com/lib/pq"
 	"github.com/sirupsen/logrus"
 	"github.com/srjchsv/simplebank/internal/handler"
 	repository "github.com/srjchsv/simplebank/internal/repository/sqlc"
 	"github.com/srjchsv/simplebank/internal/services"
 	"github.com/srjchsv/simplebank/util"
-
-	_ "github.com/lib/pq"
 )
+
+type DbConfig struct {
+	Host     string
+	Port     string
+	Username string
+	Password string
+	DbName   string
+	Pool     string
+}
 
 func main() {
 	config, err := util.LoadConfig(".")
 	if err != nil {
 		logrus.Fatal("cannot load config: ", err)
 	}
+
+	dbConfig := DbConfig{
+		Host:     config.PgHost,
+		Username: config.PgUsername,
+		Password: config.PgPassword,
+		DbName:   config.PgName,
+	}
+	dbUrl := fmt.Sprintf("host=%s user=%s password=%s dbname=%s sslmode=disable",
+		dbConfig.Host,
+		dbConfig.Username,
+		dbConfig.Password,
+		dbConfig.DbName)
 	//db connection
-	conn, err := sql.Open(config.DbDriver, config.PgUrl)
+	conn, err := sqlx.Open(config.DbDriver, dbUrl)
 	if err != nil {
 		logrus.Fatal("cannot connect to db", err)
 	}
