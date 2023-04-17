@@ -1,22 +1,24 @@
 ### 🏦 Educational project- simplebank🏦
 
 ## Currently made:
-- Database schema design. 
+
+- Database schema design.
 - Generated CRUD queries using SQLC.
 - Implemented balance transfer transaction.
 - TX lock handled.
 - Unit and integration tests.
 - Github actions CI
-- REST api. 
-- Authorization and authentification with https://github.com/srjchsv/service  microservice.
+- REST api.
+- Authorization and authentification with https://github.com/srjchsv/service microservice.
 
-## To run use `make docker`
-it would run simple-bank and auth-service and make migrations.
+## Use `make up`
+
+it would run simple-bank and make migrations
+and go to https://github.com/srjchsv/service to run auth service
 ![simplebank schema](static/simple-bank-schema.jpeg "simplebank database schema")
 
-
-
 ### Accounts management:
+
     - POST signup `make signup`
     - POST signin `make signin`
     - GET get account by id `make get-account`
@@ -25,18 +27,17 @@ it would run simple-bank and auth-service and make migrations.
     - DELETE delete account by id `make delete-account`
 
 ### Balance transfers management:
+
     - POST Transfer balance from-to account `make transfer`
-
-
 
 ### Below is the postgres database schema:
 
 ![simplebank database schema](static/simplebank.png "simplebank database schema")
 
-
 ### Useful links:
--  videos:
-https://www.youtube.com/watch?v=rx6CPDK_5mU&list=PLy_6D98if3ULEtXtNSY_2qN21VCKgoQAE
+
+- videos:
+  https://www.youtube.com/watch?v=rx6CPDK_5mU&list=PLy_6D98if3ULEtXtNSY_2qN21VCKgoQAE
 
 - articles:
-https://dev.to/techschoolguru/series/7172
+  https://dev.to/techschoolguru/series/7172
