@@ -1,22 +1,11 @@
 DB_PORT=5450
 
-.PHONY: docker sqlc test server coverage up transfer
 
-# SERVER
-server:
-	@POSTGRES_HOST=localhost
-	@AUTH_HOST=localhost
+up:
 	@docker compose up db -d
 	@make up
 	@go run cmd/app/*.go
 	
-docker:
-	@POSTGRES_HOST=db
-	@AUTH_HOST=auth
-	@docker compose build
-	@docker compose up
-	@make upDoc
-
 signup:
 	@curl -v -X POST -H 'Accept: application/json' -H 'Content-Type: application/json' --data '{"owner":"Tobby","username":"Tobb262","password":"123","balance":777,"currency":"USD"}' http://localhost:8080/auth/signup
 

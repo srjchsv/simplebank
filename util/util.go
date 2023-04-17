@@ -19,6 +19,7 @@ type Config struct {
 	PgHost            string `mapstructure:"POSTGRES_HOST"`
 	PgName            string `mapstructure:"POSTGRES_DB"`
 	PgPool            int    `mapstructure:"POSTGRES_POOL"`
+	PgPort            string `mapstructure:"POSTGRES_PORT"`
 	DbDriver          string `mapstructure:"DB_DRIVER"`
 	ServersAddress    string `mapstructure:"ADDRESS"`
 	AuthorizationPort int    `mapstructure:"AUTHORIZATION_PORT"`

@@ -33,9 +33,11 @@ func main() {
 		Username: config.PgUsername,
 		Password: config.PgPassword,
 		DbName:   config.PgName,
+		Port:     config.PgPort,
 	}
-	dbUrl := fmt.Sprintf("host=%s user=%s password=%s dbname=%s sslmode=disable",
+	dbUrl := fmt.Sprintf("host=%s port=%s user=%s password=%s dbname=%s sslmode=disable",
 		dbConfig.Host,
+		dbConfig.Port,
 		dbConfig.Username,
 		dbConfig.Password,
 		dbConfig.DbName)
